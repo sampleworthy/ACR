@@ -1,4 +1,4 @@
-# Terraform version 0.13
+# Terraform version 3.52.0
 # variables
 
 variable "apis" {
@@ -11,10 +11,10 @@ variable "apis" {
 }
 
 provider "azurerm" {
-  version = "=2.27.0"
+  version = "3.52.0"
   features {}
 }
-#Resour
+#ResourceGroup
 resource "azurerm_resource_group" "apis" {
   name        = "apis"
   location    = "East US"
@@ -30,7 +30,7 @@ resource "azurerm_application_insights" "appInsights" {
 
 #API managementt information
 resource "azurerm_api_management" "apim" {
-  name                                 = "apim11092020"
+  name                                 = "apimtestingjay"
   location                             = azurerm_resource_group.apis.location
   resource_group_name     = azurerm_resource_group.apis.name
   publisher_name                = "SAS"
@@ -46,7 +46,8 @@ resource "azurerm_api_management_api" "conferenceApi" {
     revision  = "1"
     display_name = "conference API"
     path = "conferences"
-    protocols = ["https"]
+    protocols = ["https", "http"]
+    service_url = "http://conferenceapi.azurewebsites.net"
     import {
         content_format = "swagger-link-json"
         content_value  = "http://conferenceapi.azurewebsites.net/?format=json"
