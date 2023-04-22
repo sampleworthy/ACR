@@ -76,7 +76,6 @@ resource "azurerm_api_management_api_diagnostic" "apiDiagnostics" {
 
 #API Policy #var.apim_policies_path
 resource "azurerm_api_management_policy" "example" {
-  api_management_id = azurerm_api_management.example.id
   xml_content       = file(var.apim_policies_path)
 }
 
