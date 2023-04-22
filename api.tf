@@ -1,74 +1,58 @@
-# Terraform version 0.13
-# variables
-
-variable "apis" {
-   type = map
-  default = {
-      conferenceApi = {
-          name = "conference-api"
-      }
-  }
-}
-
-provider "azurerm" {
-  version = "=2.27.0"
-  features {}
-}
-#Resour
 resource "azurerm_resource_group" "apis" {
-  name        = "apis"
-  location    = "East US"
+  name     = "apis"
+  location = "East US"
 }
 
-#AppInsights
 resource "azurerm_application_insights" "appInsights" {
+  resource_group_name = azurerm_resource_group.apis.name
   name                = "apm4apim001"
   location            = azurerm_resource_group.apis.location
-  resource_group_name = azurerm_resource_group.apis.name
   application_type    = "web"
 }
 
-#API managementt information
 resource "azurerm_api_management" "apim" {
-  name                                 = "apim11092020"
-  location                             = azurerm_resource_group.apis.location
-  resource_group_name     = azurerm_resource_group.apis.name
-  publisher_name                = "SAS"
-  publisher_email                = "Justin.Laws@sas.com"
-  sku_name                          = "Developer_1"
+  sku_name            = "Developer_1"
+  resource_group_name = azurerm_resource_group.apis.name
+  publisher_name      = "SAS"
+  publisher_email     = "Justin.Laws@sas.com"
+  name                = "apim11092020"
+  location            = azurerm_resource_group.apis.location
 }
 
-#APIs
 resource "azurerm_api_management_api" "conferenceApi" {
-    name  = var.apis.conferenceApi.name
-    resource_group_name = azurerm_resource_group.apis.name
-    api_management_name = azurerm_api_management.apim.name
-    revision  = "1"
-    display_name = "conference API"
-    path = "conferences"
-    protocols = ["https"]
-    import {
-        content_format = "swagger-link-json"
-        content_value  = "http://conferenceapi.azurewebsites.net/?format=json"
-    }
+  revision            = "1"
+  resource_group_name = azurerm_resource_group.apis.name
+  path                = "conferences"
+  name                = var.apis.conferenceApi.name
+  display_name        = "conference API"
+  api_management_name = azurerm_api_management.apim.name
+
+  import {
+    content_value  = "http://conferenceapi.azurewebsites.net/?format=json"
+    content_format = "swagger-link-json"
+  }
+
+  protocols = [
+    "https",
+  ]
 }
 
-#AppInsightsLogger
 resource "azurerm_api_management_logger" "logger" {
-    name  = "appInsightsLogger"
-    api_management_name = azurerm_api_management.apim.name
-    resource_group_name  = azurerm_resource_group.apis.name
-    application_insights {
-        instrumentation_key = azurerm_application_insights.appInsights.instrumentation_key
-    }
+  resource_group_name = azurerm_resource_group.apis.name
+  name                = "appInsightsLogger"
+  api_management_name = azurerm_api_management.apim.name
+
+  application_insights {
+    instrumentation_key = azurerm_application_insights.appInsights.instrumentation_key
+  }
 }
 
-#API Diagnostic
 resource "azurerm_api_management_api_diagnostic" "apiDiagnostics" {
-    for_each = var.apis
-        resource_group_name = azurerm_resource_group.apis.name
-        api_management_name  = azurerm_api_management.apim.name
-        api_name = each.value.name
-        api_management_logger_id = azurerm_api_management_logger.logger.id
-        identifier = "applicationinsights"
+  resource_group_name      = azurerm_resource_group.apis.name
+  identifier               = "applicationinsights"
+  for_each                 = var.apis
+  api_name                 = each.value.name
+  api_management_name      = azurerm_api_management.apim.name
+  api_management_logger_id = azurerm_api_management_logger.logger.id
 }
+
