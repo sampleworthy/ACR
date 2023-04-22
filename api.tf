@@ -47,7 +47,7 @@ resource "azurerm_api_management_api" "conferenceApi" {
     display_name = "conference API"
     path = "conferences"
     protocols = ["https", "http"]
-    service_url = "http://conferenceapi.azurewebsites.net"
+    # service_url = "http://conferenceapi.azurewebsites.net"
     import {
         content_format = "swagger-link-json"
         content_value  = "http://conferenceapi.azurewebsites.net/?format=json"
@@ -73,3 +73,10 @@ resource "azurerm_api_management_api_diagnostic" "apiDiagnostics" {
         api_management_logger_id = azurerm_api_management_logger.logger.id
         identifier = "applicationinsights"
 }
+
+#API Policy #var.apim_policies_path
+resource "azurerm_api_management_policy" "example" {
+  api_management_id = azurerm_api_management.example.id
+  xml_content       = file(var.apim_policies_path)
+}
+
