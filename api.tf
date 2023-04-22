@@ -75,7 +75,16 @@ resource "azurerm_api_management_api_diagnostic" "apiDiagnostics" {
 }
 
 #API Policy #var.apim_policies_path
-resource "azurerm_api_management_policy" "example" {
-  xml_content       = file(var.apim_policies_path)
-}
+#resource "azurerm_api_management_named_value" "example" {
+#  name                = "example-apimg"
+ # resource_group_name = azurerm_resource_group.example.name
+ # api_management_name = azurerm_api_management.example.name
+  #display_name        = "ExampleProperty"
+  #value               = "Example Value"
+#}
+
+#resource "azurerm_api_management_policy" "example" {
+  #api_management_id = azurerm_api_management.example.id
+  #xml_content       = file(var.apim_policies_path)
+#}
 
