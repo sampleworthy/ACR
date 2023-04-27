@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "apis" {
 
 #AppInsights
 resource "azurerm_application_insights" "appInsights" {
-  name                = "apm4apim001"
+  name                = "apminsights"
   location            = azurerm_resource_group.apis.location
   resource_group_name = azurerm_resource_group.apis.name
   application_type    = "web"
