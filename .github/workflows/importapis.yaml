@@ -17,11 +17,11 @@ jobs:
         with:
           inlineScript: |
             az upgrade --yes
-            az login --service-principal --tenant 76a9cd16-2892-47d9-a1bc-9a96f7f40c6e --username e2ca284c-cc98-464d-bc10-0e85166ef452 --password ivQ8Q~NktSkn_k57mqZesKo66p8aGJwNwopoHaky
+            az login --service-principal --tenant ${{ secrets.AZURE_TENANT_ID }} --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }}
       - name: Import APIs
         run: |
           for file in ./apis/*.yaml; do
-            az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file --path /${file##*/}
+            az apim api import --resource-group apis --service-name apimtestingjay --specification-format OpenApi --specification-path $file --path /${file##*/}
           done
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
