@@ -22,7 +22,7 @@ jobs:
       - name: Import APIs
         run: |
           for file in ./apis/*.yaml; do
-            az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file
+            az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file --path "/$(basename $file .yaml)"
           done
         env:
           ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
