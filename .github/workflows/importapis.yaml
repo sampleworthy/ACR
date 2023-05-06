@@ -17,15 +17,15 @@ jobs:
         with:
           inlineScript: |
             az upgrade --yes
-            az login --service-principal --tenant ${ {secrets.AZURE_TENANT_ID}} --username ${ {secrets.AZURE_CLIENT_ID}} --password ${ {secrets.AZURE_CLIENT_SECRET}}
+            az login --service-principal --tenant ${{ secrets.AZURE_TENANT_ID }} --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }}
 
       - name: Import APIs
         run: |
           for file in ./apis/*.yaml; do
-            az apim api import --resource-group ${ {secrets.RESOURCE_GROUP}} --service-name ${ {secrets.APIM_INSTANCE}} --specification-format OpenApi --specification-path $file --path /${file##*/}
+            az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file --path /${file##*/}
           done
         env:
-          ARM_CLIENT_ID: ${ {secrets.AZURE_CLIENT_ID}}
-          ARM_CLIENT_SECRET: ${ {secrets.AZURE_CLIENT_SECRET}}
-          ARM_TENANT_ID: ${ {secrets.AZURE_TENANT_ID}}
-          ARM_SUBSCRIPTION_ID: ${ {secrets.AZURE_SUBSCRIPTION_ID}}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
