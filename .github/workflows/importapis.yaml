@@ -27,7 +27,7 @@ jobs:
       - name: Import APIs
         run: |
           for file in ./apis/*.yaml; do
-            version=$(grep "version:" $file | awk '{print $2}')
-            revision=$(grep "x-api-revision:" $file | awk '{print $2}')
+            version=$(awk '/version: / {print $2; exit}' $file)
+            revision=$(awk '/x-api-revision: / {print $2; exit}' $file)
             az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file --path /${file##*/} --api-version $version --api-revision $revision
           done
