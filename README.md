@@ -12,3 +12,12 @@ terraform init, terraform init -upgrade, terraform plan, terraform apply.
 
 #
 Need to learn how to add apis and policies.
+
+
+#APIS Import remember to create rbac with role : /subscriptions/***/resourceGroups/***/providers/Microsoft.ApiManagement enable.
+1. Go Resource Group that you created.
+2. Access Control (IAM)
+3. Click +Add
+4. Search for API Management Service Contributor
+5. Gain Access.
+
