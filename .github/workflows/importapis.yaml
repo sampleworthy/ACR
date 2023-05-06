@@ -17,8 +17,7 @@ jobs:
         with:
           inlineScript: |
             az upgrade --yes
-            az login --service-principal --tenant 76a9cd16-2892-47d9-a1bc-9a96f7f40c6e --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }}
-
+            az login --service-principal --tenant 76a9cd16-2892-47d9-a1bc-9a96f7f40c6e --username e2ca284c-cc98-464d-bc10-0e85166ef452 --password ivQ8Q~NktSkn_k57mqZesKo66p8aGJwNwopoHaky
       - name: Import APIs
         run: |
           for file in ./apis/*.yaml; do
