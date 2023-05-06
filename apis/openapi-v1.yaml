@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   version: 2.0.0-oas3.1
-  title: Stock Price Viewer API
+  title: Stock Price Viewer API v2
   description: |
     This is a sample Stock Price Viewer Server based on the OpenAPI 3.0 specification.
   contact:
