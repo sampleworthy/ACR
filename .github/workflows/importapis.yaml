@@ -17,7 +17,6 @@ jobs:
         with:
           inlineScript: |
             az upgrade --yes
-            az extension add --name apim
             az login --service-principal --tenant ${{ secrets.TENANT_ID }} --username ${{ secrets.CLIENT_ID }} --password ${{ secrets.CLIENT_SECRET }}
 
       - name: Import APIs
