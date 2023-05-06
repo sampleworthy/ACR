@@ -5,7 +5,7 @@ info:
   description: |
     This is a sample Stock Price Viewer Server based on the OpenAPI 3.0 specification.  
   contact:
-    name: Justin Laws
+    name: Justin M Laws
     email: Jlaws12@liberty.edu
     
 servers:
