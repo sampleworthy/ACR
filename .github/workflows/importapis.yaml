@@ -27,5 +27,13 @@ jobs:
       - name: Import APIs
         run: |
           for file in ./apis/*.yaml; do
-            az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file --path /${file##*/}
+            # Extract the API name, version, and revision from the OpenAPI specification file
+            filename=$(basename $file)
+            apiname="${filename%.*}"
+            apiversion=$(yq eval '.info.version' $file)
+            apirevision=$(yq eval '.x-api-management.revision' $file)
+            if [ -z "$apirevision" ]; then apirevision="1"; fi
+
+            # Import the API using the extracted name, version, and revision
+            az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file --path /${apiname} --api-version-set $apiversion --api-revision $apirevision
           done
