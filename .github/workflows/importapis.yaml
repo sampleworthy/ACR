@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Validate OpenAPI with Stoplight Studio
-        uses: stoplightio/studio-action@v2
+      - name: Validate OpenAPI with OpenAPI CLI
+        uses: redocly/openapi-cli-action@v1
         with:
-          project-path: './apis/**/*.yaml'
+          args: lint ./apis/**/*.yaml
 
 
 
