@@ -12,6 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Validate OpenAPI definitions
         run: |
           npm install -g @apidevtools/swagger-cli
@@ -24,14 +25,12 @@ jobs:
           done
           echo "$invalid_files" > Openapi-API-definition-Invalid
         working-directory: ${{ github.workspace }}
-      - name: Create Issue with Invalid File
-        uses: peter-evans/create-issue-from-file@v2.5.2
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          title: Invalid OpenAPI files
-          content-filepath: ./Openapi-API-definition-Invalid
-          labels: invalid openapi
-          assignees: ${{ github.actor }}
-        if: ${{ steps.validate.outputs.invalid_files != '' }}
+          name: invalid-apis
+          path: ./Openapi-API-definition-Invalid
 
       - name: Login to Azure
         uses: azure/login@v1
