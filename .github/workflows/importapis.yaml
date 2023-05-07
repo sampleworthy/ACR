@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
+
 jobs:
-  test_swagger_editor_validator_remote:
+  openapi_validation:
     runs-on: ubuntu-latest
-    name: Swagger Editor Validator Remote
 
     steps:
       - uses: actions/checkout@v2
@@ -16,10 +16,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Validate OpenAPI definition
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install swagger-cli
+        run: npm install -g @apidevtools/swagger-cli
+      - name: Validate OpenAPI definitions
         run: |
           for file in apis/*.yaml; do
-            docker run --rm -v "${PWD}/${file}:/openapi.yaml" zalando/openapi-validator /openapi.yaml || exit 1
+            docker run --rm -v "${PWD}/${file}:/api.yaml" jeanberu/swagger-cli validate /api.yaml || exit 1
           done
 
 
