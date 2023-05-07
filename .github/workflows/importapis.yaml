@@ -4,18 +4,18 @@ on:
   push:
     branches:
       - main
-
 jobs:
-  test_swagger_editor_validator_remote:
+  test_openapi:
     runs-on: ubuntu-latest
-    name: Swagger Editor Validator Remote
+    name: Validate OpenAPI
 
     steps:
       - uses: actions/checkout@v2
-      - name: Validate OpenAPI definition
-        uses: char0n/swagger-editor-validate@v1
+      - name: Validate OpenAPI with Stoplight Studio
+        uses: stoplightio/studio-action@v2
         with:
-          definition-file: /home/runner/work/APIM-Terraform/APIM-Terraform/apis/**/*.yaml
+          project-path: './apis/**/*.yaml'
+
 
 
       - name: Login to Azure
