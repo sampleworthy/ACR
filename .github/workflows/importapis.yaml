@@ -1,29 +1,36 @@
-name: Import APIs to APIM
+name: Validate OpenAPI Definitions
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
-  swagger-validation:
+  validate:
     runs-on: ubuntu-latest
-    name: Swagger Validation
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Validate OpenAPI definitions
         run: |
-          npm install -g @apidevtools/swagger-cli
-          cd apis
-          invalid_files=""
-          for file in *.yaml; do
-            if ! swagger-cli validate "$file"; then
-              invalid_files+="$file "
-            fi
+          mkdir invalid-openapi
+          for f in $(find ./apis -type f -name "*.yaml"); do
+            swagger-cli validate $f || echo "$f" >> ./invalid-openapi/Openapi-API-definition-Invalid
           done
-          echo "$invalid_files" > Openapi-API-definition-Invalid
-        working-directory: ${{ github.workspace }}
+
+      - name: Email invalid OpenAPI definitions
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.office365.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: Invalid OpenAPI definitions
+          to: jlaws12@liberty.edu
+          body: |
+            Please find attached the list of invalid OpenAPI definitions.
+          attachments: |
+            ./invalid-openapi/Openapi-API-definition-Invalid
+
 
       - name: Login to Azure
         uses: azure/login@v1
