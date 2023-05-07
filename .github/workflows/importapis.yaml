@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Validate OpenAPI definitions
-        id: validate-openapi
         run: |
           npm install -g @apidevtools/swagger-cli
           cd apis
@@ -23,10 +22,8 @@ jobs:
               invalid_files+="$file "
             fi
           done
-          echo "::set-output name=invalid_files::$invalid_files"
+          echo "$invalid_files" > Openapi-API-definition-Invalid
         working-directory: ${{ github.workspace }}
-
-
 
       - name: Login to Azure
         uses: azure/login@v1
