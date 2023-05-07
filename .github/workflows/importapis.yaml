@@ -35,3 +35,16 @@ jobs:
           for file in ./apis/*.yaml; do
             az apim api import --resource-group ${{ secrets.RESOURCE_GROUP }} --service-name ${{ secrets.APIM_INSTANCE }} --specification-format OpenApi --specification-path $file --path /${file##*/}
           done
+        env:
+          invalid_files: $(cat Openapi-API-definition-Invalid)
+      - name: Create issue with invalid files
+        uses: peter-evans/create-issue-from-file@v2
+        with:
+          title: Invalid OpenAPI definitions found
+          body: |
+            The following OpenAPI definitions failed validation:
+            ```
+            ${{ env.invalid_files }}
+            ```
+          filename: Openapi-API-definition-Invalid
+        if: env.invalid_files != ''
