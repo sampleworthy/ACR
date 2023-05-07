@@ -13,13 +13,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Validate OpenAPI definitions
+        id: validate-openapi
         run: |
           npm install -g @apidevtools/swagger-cli
           cd apis
+          invalid_files=""
           for file in *.yaml; do
-            swagger-cli validate "$file"
+            if ! swagger-cli validate "$file"; then
+              invalid_files+="$file "
+            fi
           done
+          echo "::set-output name=invalid_files::$invalid_files"
         working-directory: ${{ github.workspace }}
+
 
 
       - name: Login to Azure
