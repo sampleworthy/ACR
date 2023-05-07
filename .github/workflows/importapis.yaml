@@ -11,12 +11,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Validate OpenAPI with Zalando OpenAPI Validator
+      - name: Validate OpenAPI with API Fuzzer
         run: |
-          docker pull zalando/openapi-validator
-          docker run --rm -v $(pwd):/data zalando/openapi-validator /data/apis/**/*.yaml
-
-
+          docker pull quay.io/ceye/api-fuzzer
+          docker run --rm -v $(pwd):/data quay.io/ceye/api-fuzzer validate /data/apis/**/*.yaml
 
       - name: Login to Azure
         uses: azure/login@v1
