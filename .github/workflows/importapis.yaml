@@ -15,7 +15,8 @@ jobs:
       - name: Validate OpenAPI definition
         uses: char0n/swagger-editor-validate@v1
         with:
-          definition-file: './**/*.yaml'
+          definition-file: /home/runner/work/APIM-Terraform/APIM-Terraform/apis/**/*.yaml
+
 
       - name: Login to Azure
         uses: azure/login@v1
