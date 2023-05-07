@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Validate OpenAPI with OpenAPI CLI
-        uses: redocly/openapi-cli-action@v1
-        with:
-          args: lint ./apis/**/*.yaml
+      - name: Validate OpenAPI with Zalando OpenAPI Validator
+        run: |
+          docker pull zalando/openapi-validator
+          docker run --rm -v $(pwd):/data zalando/openapi-validator /data/apis/**/*.yaml
 
 
 
