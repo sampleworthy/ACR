@@ -15,7 +15,7 @@ provider "azurerm" {
 }
 
 #ResourceGroup
-resource "azurerm_resource_group" "apis" {
+resource "azurerm_resource_group" "apim" {
   name        = "terraform-apis"
   location    = "East US"
 }
@@ -23,16 +23,16 @@ resource "azurerm_resource_group" "apis" {
 #AppInsights
 resource "azurerm_application_insights" "appInsights" {
   name                = "apminsights"
-  location            = azurerm_resource_group.apis.location
-  resource_group_name = azurerm_resource_group.apis.name
+  location            = azurerm_resource_group.apim.location
+  resource_group_name = azurerm_resource_group.apim.name
   application_type    = "web"
 }
 
 #API management information
 resource "azurerm_api_management" "apim" {
   name                = "apimtestingjaydx"
-  location            = azurerm_resource_group.apis.location
-  resource_group_name = azurerm_resource_group.apis.name
+  location            = azurerm_resource_group.apim.location
+  resource_group_name = azurerm_resource_group.apim.name
   publisher_name      = "Justin Laws"
   publisher_email     = "jayapimtesting@outlook.com"
   sku_name            = "Developer_1"
@@ -41,7 +41,7 @@ resource "azurerm_api_management" "apim" {
 #APIs
 resource "azurerm_api_management_api" "conferenceApi" {
     name                = var.apis.conferenceApi.name
-    resource_group_name = azurerm_resource_group.apis.name
+    resource_group_name = azurerm_resource_group.apim.name
     api_management_name = azurerm_api_management.apim.name
     revision            = "1"
     display_name        = "conference API"
@@ -57,7 +57,7 @@ resource "azurerm_api_management_api" "conferenceApi" {
 resource "azurerm_api_management_logger" "logger" {
     name                = "appInsightsLogger"
     api_management_name = azurerm_api_management.apim.name
-    resource_group_name = azurerm_resource_group.apis.name
+    resource_group_name = azurerm_resource_group.apim.name
     application_insights {
         instrumentation_key = azurerm_application_insights.appInsights.instrumentation_key
     }
@@ -66,7 +66,7 @@ resource "azurerm_api_management_logger" "logger" {
 #API Diagnostic
 resource "azurerm_api_management_api_diagnostic" "apiDiagnostics" {
     for_each = var.apis
-    resource_group_name = azurerm_resource_group.apis.name
+    resource_group_name = azurerm_resource_group.apim.name
     api_management_name = azurerm_api_management.apim.name
     api_name = each.value.name
     api_management_logger_id = azurerm_api_management_logger.logger.id
@@ -76,7 +76,7 @@ resource "azurerm_api_management_api_diagnostic" "apiDiagnostics" {
 #API Policy var.apim_policies_path
 resource "azurerm_api_management_named_value" "policies" {
   name                = "policies"
-  resource_group_name = azurerm_resource_group.apis.name
+  resource_group_name = azurerm_resource_group.apim.name
   api_management_name = azurerm_api_management.apim.name
   display_name        = "ExampleProperty"
   value               = "Example Value"
@@ -90,7 +90,7 @@ resource "azurerm_api_management_policy" "policies" {
 #Creat API Products
 resource "azurerm_api_management_product" "product" {
   product_id            = "test-product"
-  resource_group_name   = azurerm_resource_group.apis.name
+  resource_group_name   = azurerm_resource_group.apim.name
   api_management_name   = azurerm_api_management.apim.name
   display_name          = "test Product"
   subscription_required = true
