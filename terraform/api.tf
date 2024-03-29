@@ -30,7 +30,7 @@ resource "azurerm_application_insights" "appInsights" {
 
 #API management information
 resource "azurerm_api_management" "apim" {
-  name                = "apimtestingjay"
+  name                = "apimtestingjaydx"
   location            = azurerm_resource_group.apis.location
   resource_group_name = azurerm_resource_group.apis.name
   publisher_name      = "Justin Laws"
