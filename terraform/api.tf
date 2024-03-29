@@ -16,7 +16,7 @@ provider "azurerm" {
 
 #ResourceGroup
 resource "azurerm_resource_group" "apis" {
-  name        = "apim"
+  name        = "terraform-apis"
   location    = "East US"
 }
 
