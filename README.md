@@ -1,23 +1,27 @@
-# APIM Diagram
+This is a GitHub Actions workflow that deploys Terraform configurations to Azure whenever there's a push to the `main` branch of your repository. Here's a step-by-step breakdown:
 
-![APIM Diagram](https://user-images.githubusercontent.com/86179207/233776825-78ea58ce-bae6-41a7-a0b7-bcab5b90050d.png)
+1. `name: 'Terraform deploy GitHub Actions'`: This is the name of your GitHub Actions workflow.
 
+2. `on: push: branches: - main`: This specifies that the workflow should be triggered whenever there's a push to the `main` branch.
 
-# APIM Terraform Code
+3. `jobs: terraform: name: 'Terraform'`: This starts the definition of a job called `Terraform`.
 
-Term: Az login (login into azure account)
-ref# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management
-Commands:
-terraform init, terraform init -upgrade, terraform plan, terraform apply.
+4. `runs-on: ubuntu-latest`: This specifies that the job should run on the latest version of the Ubuntu virtual environment provided by GitHub Actions.
 
-#
-Need to learn how to add apis and policies.
+5. `defaults: run: working-directory: ./terraform`: This sets the default working directory for all the steps in the job to `./terraform`.
 
+6. `steps:`: This starts the definition of the steps that the job will execute.
 
-#APIS Import remember to create rbac with role : /subscriptions/***/resourceGroups/***/providers/Microsoft.ApiManagement enable.
-1. Go Resource Group that you created.
-2. Access Control (IAM)
-3. Click +Add
-4. Search for API Management Service Contributor
-5. Gain Access.
+7. `- name: Checkout uses: actions/checkout@v2`: This step checks out your repository so the workflow can access its contents.
 
+8. `- name: Login to Azure uses: azure/login@v1 with: creds: ${{ secrets.AZURE_CREDENTIALS }}`: This step logs into Azure using the credentials stored in the `AZURE_CREDENTIALS` secret.
+
+9. `- name: Setup Terraform uses: hashicorp/setup-terraform@v1`: This step sets up Terraform.
+
+10. `- name: Terraform Init run: terraform init`: This step initializes your Terraform configuration.
+
+11. `- name: Terraform Validate run: terraform validate`: This step validates your Terraform configuration.
+
+12. `- name: Terraform Plan run: terraform plan`: This step creates an execution plan for your Terraform configuration.
+
+13. `- name: Terraform Apply run: terraform apply -auto-approve`: This step applies the changes specified in your Terraform configuration. The `-auto-approve` option means it will not prompt for approval.
